@@ -8,6 +8,11 @@ const app=express();
 const PORT=process.env.PORT || 8000;
 const userRoute=require('./routes/user');
 
+app.use((req, res, next) => {
+    res.locals.currentPath = req.path; // Add current path to res.locals
+    next();
+});
+
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.set("view engine","ejs");
@@ -25,6 +30,8 @@ app.use(express.static('public'));
 mongoose.connect(process.env.MONGO_URL).then((e)=>{
     console.log("Monogodb connected");
 });
+
+
 
 app.get('/',async (req,res)=>{
     return res.render("home");
